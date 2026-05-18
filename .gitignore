@@ -1,0 +1,36 @@
+# --- 商业辞典数据：DO NOT COMMIT ---
+# 小学館中日辞典 第3版 仅作本地 QA 参考使用，禁止入仓（DMCA 风险）
+vendor/shogakukan/
+vendor/shogakukan-*.zip
+
+# QA 抽样报告含小学館原文，也不入仓
+qa/sample-*.md
+qa/sample-*.json
+
+# --- 上游大件原始数据：本地缓存即可，不入仓 ---
+# Tatoeba snapshot (~20MB)
+vendor/tatoeba-raw/
+
+# JMdict full common JSON (~16MB)，跑脚本时从上游 fetch
+vendor/jmdict-eng-common-*.json
+vendor/jmdict-raw/
+
+# JLPT vocab zip (已解压到 jlpt-vocab/，原 zip 不需要)
+vendor/jlpt.zip
+
+# --- Phase 0 临时产物 ---
+# sanity batch_001_src.json 已同步到 JLPTsimu 主仓的 dispatch dir
+_phase0/
+
+# --- 生成过程产物 ---
+raw/
+tmp/
+*.jsonl
+*.log
+
+# --- 编辑器 / OS ---
+.DS_Store
+.idea/
+.vscode/
+*.swp
+node_modules/
