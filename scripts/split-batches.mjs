@@ -33,28 +33,31 @@ if (!OUT_DIR) {
   console.error('--out-dir is required');
   process.exit(1);
 }
-if (!/^N[1-5]$/.test(LEVEL)) {
-  console.error('--level must be N1..N5');
+if (!/^(N[1-5]|untagged)$/.test(LEVEL)) {
+  console.error('--level must be N1..N5 or untagged');
   process.exit(1);
 }
 
 console.log(`[config] level=${LEVEL}  batch-size=${BATCH_SIZE}  out-dir=${OUT_DIR}  start-batch=${START_BATCH}`);
 
-// --- 加载 JLPT 标签 + 构建目标 level surface→reading 集合 ---
+// --- 加载 JLPT 标签 ---
 const jlptTags = JSON.parse(fs.readFileSync(path.join(ROOT, 'vendor/jlpt-tags.json'), 'utf8'));
-const surfaceReadings = new Map(); // surface → Set<reading>
+
+// 构建 surface→Set<reading> 映射；untagged 模式下收所有 N1-N5 已标记的 (surface,reading)
+const surfaceReadings = new Map();
 for (const [surface, entries] of Object.entries(jlptTags)) {
   for (const e of entries) {
-    if (e.level !== LEVEL) continue;
+    const include = LEVEL === 'untagged' ? /^N[1-5]$/.test(e.level) : e.level === LEVEL;
+    if (!include) continue;
     if (!surfaceReadings.has(surface)) surfaceReadings.set(surface, new Set());
     surfaceReadings.get(surface).add(e.reading);
   }
 }
-console.log(`[jlpt] ${LEVEL} unique surfaces: ${surfaceReadings.size}`);
+console.log(`[jlpt] ${LEVEL === 'untagged' ? 'tagged surfaces (to exclude)' : LEVEL + ' unique surfaces'}: ${surfaceReadings.size}`);
 
 // --- 加载 JMdict + reading-match 过滤 ---
 const jm = JSON.parse(fs.readFileSync(path.join(ROOT, 'vendor/jmdict-eng-common-3.6.2.json'), 'utf8'));
-function matchesLevel(entry) {
+function matchesAnyTaggedLevel(entry) {
   for (const k of entry.kanji) {
     const readings = surfaceReadings.get(k.text);
     if (!readings) continue;
@@ -74,8 +77,10 @@ function matchesLevel(entry) {
   }
   return false;
 }
-const levelEntries = jm.words.filter(matchesLevel);
-console.log(`[jmdict] ${LEVEL} reading-matched entries: ${levelEntries.length}`);
+const levelEntries = LEVEL === 'untagged'
+  ? jm.words.filter((e) => !matchesAnyTaggedLevel(e))
+  : jm.words.filter(matchesAnyTaggedLevel);
+console.log(`[jmdict] ${LEVEL} ${LEVEL === 'untagged' ? 'untagged (no JLPT label)' : 'reading-matched'} entries: ${levelEntries.length}`);
 
 // --- 排除指定 entry IDs（可选）---
 let excluded = new Set();
@@ -144,7 +149,7 @@ for (let i = 0; i < batches.length; i++) {
   const batch = batches[i];
 
   const enriched = batch.map((entry) => {
-    const matchedJlpt = [
+    const matchedJlpt = LEVEL === 'untagged' ? [] : [
       ...entry.kanji.map((k) => k.text),
       ...entry.kana.map((k) => k.text),
     ].flatMap((s) =>
