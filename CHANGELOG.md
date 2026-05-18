@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to JLPT-leveled releases (`v0.1.0-N5` → `v0.2.0-N4` → ...).
 
+## [v0.2.0-N4] - 2026-05-18
+
+### Added
+
+- **N4 level data** — `data/jmdict-cn-N4.json` (596 entries, 1.4 MB)
+  - 中文释义 + 3-4 句日语例句 + 中文翻译，结构同 N5
+  - **69% 含 Tatoeba 真人例句**
+  - **59% multi-sense** 词条
+  - 来源 batches: batch_018..032，全部由 Claude Code subagent 在 Max plan token quota 下生成
+- 元信息：`data/jmdict-cn-N4.meta.json`
+
+### Coverage statistics (N4)
+
+- JLPT N4 vocab list (stephenmk 2025.08.01.0): 643 entries
+- After (surface, reading) match against JMdict common: **596 entries** (93%)
+
 ## [v0.1.0-N5] - 2026-05-18
 
 ### Added

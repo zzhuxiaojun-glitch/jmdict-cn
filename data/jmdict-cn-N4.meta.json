@@ -1,0 +1,84 @@
+{
+  "level": "N4",
+  "version": "v0.2.0-N4",
+  "entry_count": 596,
+  "generated_at": "2026-05-18T14:55:17.226Z",
+  "source_batches": [
+    {
+      "batch_id": "batch_018",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_019",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_020",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_021",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_022",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_023",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_024",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_025",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_026",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_027",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_028",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_029",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_030",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_031",
+      "included": 40,
+      "skipped": 0
+    },
+    {
+      "batch_id": "batch_032",
+      "included": 36,
+      "skipped": 0
+    }
+  ],
+  "known_bad_excluded_count": 0
+}
