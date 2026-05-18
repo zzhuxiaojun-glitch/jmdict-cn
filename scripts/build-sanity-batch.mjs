@@ -23,19 +23,46 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 
 console.log('[1/5] 加载 JLPT 标签...');
 const jlptTags = JSON.parse(fs.readFileSync(path.join(ROOT, 'vendor/jlpt-tags.json'), 'utf8'));
-const n5Surfaces = new Set();
+// 修复 (2026-05-18): 必须按 (surface, reading) 对匹配，否则同形不同读音的词会选错。
+// 例：大勢 在 JLPT N5 表里指 おおぜい (人多)，但 JMdict 1414230 是 たいせい (大势)，
+// 同形不同义。原始 surface-only 过滤会错选到 たいせい。
+const n5SurfaceReadings = new Map(); // surface → Set<reading>
 for (const [surface, entries] of Object.entries(jlptTags)) {
-  if (entries.some((e) => e.level === 'N5')) n5Surfaces.add(surface);
+  for (const e of entries) {
+    if (e.level !== 'N5') continue;
+    if (!n5SurfaceReadings.has(surface)) n5SurfaceReadings.set(surface, new Set());
+    n5SurfaceReadings.get(surface).add(e.reading);
+  }
 }
-console.log(`  N5 surfaces: ${n5Surfaces.size}`);
+console.log(`  N5 surfaces: ${n5SurfaceReadings.size}`);
 
 console.log('[2/5] 加载 JMdict common...');
 const jm = JSON.parse(fs.readFileSync(path.join(ROOT, 'vendor/jmdict-eng-common-3.6.2.json'), 'utf8'));
-const n5Entries = jm.words.filter((entry) => {
-  const surfaces = [...entry.kanji.map((k) => k.text), ...entry.kana.map((k) => k.text)];
-  return surfaces.some((s) => n5Surfaces.has(s));
-});
-console.log(`  JMdict N5-tagged entries: ${n5Entries.length}`);
+function matchesN5(entry) {
+  // 路径 1：kanji 表面 × kana 读音 配对
+  for (const k of entry.kanji) {
+    const readings = n5SurfaceReadings.get(k.text);
+    if (!readings) continue;
+    for (const kn of entry.kana) {
+      // JMdict 的 appliesToKanji 约束哪些 kanji 形可用该读音；'*' 或 缺省 = 全部适用
+      const applies = !kn.appliesToKanji
+        || kn.appliesToKanji.length === 0
+        || kn.appliesToKanji.includes('*')
+        || kn.appliesToKanji.includes(k.text);
+      if (applies && readings.has(kn.text)) return true;
+    }
+  }
+  // 路径 2：kana-only 词条（JLPT surface = reading）
+  if (entry.kanji.length === 0) {
+    for (const kn of entry.kana) {
+      const readings = n5SurfaceReadings.get(kn.text);
+      if (readings && readings.has(kn.text)) return true;
+    }
+  }
+  return false;
+}
+const n5Entries = jm.words.filter(matchesN5);
+console.log(`  JMdict N5-tagged entries (reading-matched): ${n5Entries.length}`);
 
 console.log('[3/5] 加载 Tatoeba jpn↔cmn pair index...');
 const links = fs.readFileSync(path.join(ROOT, 'vendor/tatoeba-raw/jpn-cmn_links.tsv'), 'utf8')
