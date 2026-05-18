@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to JLPT-leveled releases (`v0.1.0-N5` → `v0.2.0-N4` → ...).
 
+## [v0.5.0-N1] - 2026-05-19
+
+### Added
+
+- **N1 level data** — `data/jmdict-cn-N1.json` (2,698 entries, 5.1 MB)
+  - 中文释义 + 3-4 句日语例句 + 中文翻译，结构同 N5/N4/N3/N2
+  - **26% 含 Tatoeba 真人例句**（N1 偏书面/抽象/学术，Tatoeba 命中率与 N2 类似）
+  - **41% multi-sense** 词条
+  - 来源 batches: batch_116..183 (68 个 batches)
+- 元信息：`data/jmdict-cn-N1.meta.json`
+
+### Coverage statistics (N1)
+
+- JLPT N1 vocab list (stephenmk 2025.08.01.0): 3,214 entries
+- After (surface, reading) match against JMdict common: **2,698 entries** (84%)
+
+### 🎉 JLPT 全 5 级完成
+
+| Phase | 词条 | Release |
+|---|---|---|
+| N5 | 622 | v0.1.0-N5 |
+| N4 | 596 | v0.2.0-N4 |
+| N3 | 1,608 | v0.3.0-N3 |
+| N2 | 1,659 | v0.4.0-N2 |
+| **N1** | **2,698** | **v0.5.0-N1** |
+| **Total published** | **7,183** | |
+
+下一步：v0.6.0-untagged（JLPT 表外 ~15,400 entries，最大桶）。
+
 ## [v0.4.0-N2] - 2026-05-19
 
 ### Added
