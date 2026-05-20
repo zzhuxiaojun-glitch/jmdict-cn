@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to JLPT-leveled releases (`v0.1.0-N5` → `v0.2.0-N4` → ...).
 
+## [v0.6.0-untagged] - 2026-05-21
+
+### Added
+
+- **JLPT 表外（untagged）level data** — `data/jmdict-cn-untagged.json` (15,526 entries, 26.1 MB)
+  - 中文释义 + 3-4 句日语例句 + 中文翻译，结构同 N5/N4/N3/N2/N1
+  - **16% 含 Tatoeba 真人例句**（表外多为低频/外来语/功能词，Tatoeba 命中率偏低）
+  - **26% multi-sense** 词条
+  - 来源 batches: batch_184..572（389 个 batches，由 Claude Code subagent 分波生成）
+- 元信息：`data/jmdict-cn-untagged.meta.json`
+
+### Coverage statistics (untagged)
+
+- JMdict common 词条中**未带 JLPT N1-N5 标签**的部分（"表外"常用词，含大量外来语、专有名词、功能词、口语词）
+- **15,526 entries** — 本项目最大的单桶，是 N1-N5 全部之和（7,183）的 2.2 倍
+
+### 🎉 jmdict-cn 全量完成
+
+| Phase | 词条 | Release |
+|---|---|---|
+| N5 | 622 | v0.1.0-N5 |
+| N4 | 596 | v0.2.0-N4 |
+| N3 | 1,608 | v0.3.0-N3 |
+| N2 | 1,659 | v0.4.0-N2 |
+| N1 | 2,698 | v0.5.0-N1 |
+| **untagged** | **15,526** | **v0.6.0-untagged** |
+| **Total published** | **22,709** | |
+
+JMdict common 全量中文化完成。
+
 ## [v0.5.0-N1] - 2026-05-19
 
 ### Added
